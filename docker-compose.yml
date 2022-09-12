@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: _docker/app/Dockerfile
+    restart: always
+
+    volumes:
+      - www:/var/www
+      #- ./:/var/www
+
+    container_name: backend  
+    
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8050:80
+    restart: always
+    depends_on:
+      - backend
+    links:
+      - backend
+
+    volumes:
+      #- ./:/var/www
+      - www:/var/www
+      - ./_docker/nginx/conf.d:/etc/nginx/conf.d
+      #- www:/var/www/proxicom_test/_docker/nginx/conf.d:/etc/nginx/conf.d
+
+    container_name: nginx
+    
+    
+volumes:
+  www:
+ 
+
